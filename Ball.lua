@@ -22,6 +22,15 @@ function Ball:update(dt)
 	self.y = self.y + self.dy * dt 
 end
 
+function Ball:collides(paddle)
+	if self.x + 2*self.radius > paddle.x + paddle.width or paddle.x > self.x + 2*self.radius then
+		return false
+	end
+	if self.y > paddle.y + paddle.width or paddle.y > self.y + 2*self.radius then
+		return false
+	end
+	return true
+end
 function Ball: render()
 	love.graphics.circle('fill', self.x, self.y, self.radius, self.sections)
 end

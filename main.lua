@@ -66,6 +66,19 @@ end
 
 
 function love.update(dt)
+	if gameState == 'play' then
+		print(ball:collides(player1))
+		print(ball:collides(player2))
+		if ball.y <= 34 then
+			ball.y = 34
+			ball.dy = -ball.dy
+		end	
+		if ball.y >= 204 then 
+			ball.y = 204
+			ball.dy = -ball.dy
+		end
+	end
+	
 	if love.keyboard.isDown("w") then
 		player1.dy = -PADDLE_SPEED
 	elseif love.keyboard.isDown("s") then
@@ -84,8 +97,8 @@ function love.update(dt)
 	
 	if gameState == 'play' then
 		ball:update(dt)	
-		
 	end
+
 	player1:update(dt)
 	player2:update(dt)
 
