@@ -16,6 +16,7 @@ PLAYER2_SCORE = 0
 PADDLE1_POS = 33
 PADDLE2_POS = VIRTUAL_HEIGHT - 56
 
+message = 'Press Enter to start'
 -- put the dotted line's start coords
 x1, y1 = 214, 33
 -- dotted line's end coords
@@ -55,9 +56,9 @@ function love.keypressed(key, scancode, isrepeat)
 		love.event.quit()
 	elseif key == 'enter' or key == 'return' then
 		if gameState == 'start' then
+			gameState = 'serve'
+		elseif gameState == 'serve' then
 			gameState = 'play'
-		else
-			gameState = 'start'
 	
 			ball:reset()	
 		end
@@ -66,6 +67,14 @@ end
 
 
 function love.update(dt)
+	if gameState == 'serve' then
+		ball.dy = math.random(-50, 50)
+		if servingPlayer == 1 then
+			ball.dx = math.random (140, 200)
+		else
+			ball.dx = -math.random(140, 200)
+		end
+	end
 	if gameState == 'play' then
 		if ball:collides(player1) then
 			ball.dx = -ball.dx * 1.03
@@ -76,9 +85,8 @@ function love.update(dt)
 			else
 				ball.dy = math.random(10, 150)
 			end
-		end
 
-		if ball:collides(player2) then
+		elseif ball:collides(player2) then
 
 			ball.dx = -ball.dx * 1.03
 			ball.x = player2.x - 2*ball.radius + 1
@@ -99,6 +107,25 @@ function love.update(dt)
 			ball.y = 204
 			ball.dy = -ball.dy
 		end
+	end
+	
+	if ball.x < 30 then
+		print('player 2 win')
+		message = 'Player 2 serve'
+		servingPlayer = 2
+		PLAYER1_SCORE = PLAYER1_SCORE + 1
+		ball:reset()
+		gameState = 'serve'
+	end
+	
+	if ball.x > 405 then
+		print('player 1 win')
+		message = 'Player 1 serve'
+		servingPlayer = 1
+		PLAYER2_SCORE = PLAYER2_SCORE + 1
+		ball:reset()
+		gameState = 'serve'
+		
 	end
 	
 	if love.keyboard.isDown("w") then
@@ -157,6 +184,7 @@ function love.draw()
 	font = love.graphics.newFont("font.ttf", 8)
 	love.graphics.setFont(font)
 	love.graphics.printf('hello pong', 0, 20, VIRTUAL_WIDTH, 'center')
+	love.graphics.printf(message, 0, 5, VIRTUAL_WIDTH, 'center')
 
 	-- score fonts innit
 	scoreFont = love.graphics.newFont('font.ttf', 32)
