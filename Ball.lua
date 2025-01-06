@@ -23,13 +23,15 @@ function Ball:update(dt)
 end
 
 function Ball:collides(paddle)
-	if self.x + 2*self.radius > paddle.x + paddle.width or paddle.x > self.x + 2*self.radius then
-		return false
-	end
-	if self.y > paddle.y + paddle.width or paddle.y > self.y + 2*self.radius then
-		return false
-	end
-	return true
+	    local closestX = math.max(paddle.x, math.min(self.x + self.radius, paddle.x + paddle.width))
+	    local closestY = math.max(paddle.y, math.min(self.y + self.radius, paddle.y + paddle.height))
+	    
+	    -- Calculate the distance between the ball's center and this closest point
+	    local distanceX = (self.x + self.radius) - closestX
+	    local distanceY = (self.y + self.radius) - closestY
+	    
+	    -- Check if the distance is less than or equal to the ball's radius
+	    return (distanceX ^ 2 + distanceY ^ 2) <= (self.radius ^ 2)
 end
 function Ball: render()
 	love.graphics.circle('fill', self.x, self.y, self.radius, self.sections)

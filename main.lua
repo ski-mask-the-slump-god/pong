@@ -67,8 +67,30 @@ end
 
 function love.update(dt)
 	if gameState == 'play' then
-		print(ball:collides(player1))
-		print(ball:collides(player2))
+		if ball:collides(player1) then
+			ball.dx = -ball.dx * 1.03
+			ball.x = player1.x + 2*ball.radius	
+			
+			if ball.dy < 0 then
+				ball.dy = -math.random(10, 150)
+			else
+				ball.dy = math.random(10, 150)
+			end
+		end
+
+		if ball:collides(player2) then
+
+			ball.dx = -ball.dx * 1.03
+			ball.x = player2.x - 2*ball.radius + 1
+			
+			if ball.dy < 0 then
+				ball.dy = -math.random(10, 150)
+			else
+				ball.dy = math.random(10, 150)
+			end
+		end
+
+
 		if ball.y <= 34 then
 			ball.y = 34
 			ball.dy = -ball.dy
