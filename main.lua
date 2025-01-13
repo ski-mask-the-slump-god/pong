@@ -16,6 +16,9 @@ PLAYER2_SCORE = 0
 PADDLE1_POS = 33
 PADDLE2_POS = VIRTUAL_HEIGHT - 56
 
+image = love.graphics.newImage("texture.jpg")
+shader = love.graphics.newShader("shader.glsl")
+
 message = 'Press Enter to start'
 -- put the dotted line's start coords
 x1, y1 = 214, 33
@@ -67,6 +70,8 @@ end
 
 
 function love.update(dt)
+	shader:send("millis", love.timer.getTime())
+    	shader:send("resolution", {love.graphics.getWidth(), love.graphics.getHeight()})
 	if gameState == 'serve' then
 		ball.dy = math.random(-50, 50)
 		if servingPlayer == 1 then
@@ -156,6 +161,9 @@ end
 
 function love.draw()
 	push:apply('start')
+	love.graphics.setShader(shader)
+	love.graphics.draw(image, 0, 0)
+	love.graphics.setShader()
 	love.graphics.clear(40/255, 45/255, 52/255, 1)
 
 	--border
